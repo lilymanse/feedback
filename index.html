@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수업 참여 및 피드백</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter 폰트 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Inter 폰트 기본 적용 */
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        /* 슬라이더 질문 항목 스타일 */
+        .survey-question {
+            margin-bottom: 2rem; /* 질문 간 간격 */
+        }
+        .slider-label {
+            display: block;
+            text-align: left;
+            font-size: 1.125rem; /* 18px */
+            font-weight: 600; /* semibold */
+            color: #1f2937; /* gray-800 */
+            margin-bottom: 0.75rem; /* 12px */
+        }
+        .slider-emoji {
+            font-size: 3rem; /* 48px */
+            margin-bottom: 0.5rem; /* 8px */
+            height: 50px; /* 이모지 높이 고정 */
+        }
+        .slider-score {
+            font-size: 1.5rem; /* 24px */
+            font-weight: 700; /* bold */
+            color: #2563EB; /* blue-600 */
+            margin-bottom: 1rem; /* 16px */
+            height: 30px; /* 점수 높이 고정 */
+        }
+        .slider-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem; /* 14px */
+            color: #6b7280; /* gray-500 */
+            margin-top: 0.5rem; /* 8px */
+            padding: 0 0.25rem; /* 4px */
+        }
+        
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-start min-h-screen">
+
+    <!-- 만족도 조사 카드 -->
+    <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl text-center max-w-md w-full mx-4">
+        
+        <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-8">
+            오늘 수업 피드백
+        </h1>
+
+        <!-- === 질문 1 (슬라이더) === -->
+        <div class="survey-question">
+            <label class="slider-label" for="q1Slider">
+                Q1. 오늘 수업에 어떻게 참여 했나요?
+            </label>
+            <div id="q1Emoji" class="slider-emoji">😊</div>
+            <div id="q1Score" class="slider-score">5 / 10</div>
+            <input 
+                type="range" 
+                id="q1Slider"
+                min="1" max="10" value="5" 
+                class="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 survey-slider"
+                data-emoji-target="q1Emoji"
+                data-score-target="q1Score"
+            >
+            <div class="slider-legend">
+                <span>1점 (소극적)</span>
+                <span>10점 (적극적)</span>
+            </div>
+        </div>
+
+        <!-- === 질문 2 (슬라이더) === -->
+        <div class="survey-question">
+            <label class="slider-label" for="q2Slider">
+                Q2. Q드럼의 겉넓이와 부피를 구하는 방법을 얼마나 이해했나요?
+            </label>
+            <div id="q2Emoji" class="slider-emoji">😊</div>
+            <div id="q2Score" class="slider-score">5 / 10</div>
+            <input 
+                type="range" 
+                id="q2Slider"
+                min="1" max="10" value="5" 
+                class="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 survey-slider"
+                data-emoji-target="q2Emoji"
+                data-score-target="q2Score"
+            >
+            <div class="slider-legend">
+                <span>1점 (이해 못함)</span>
+                <span>10점 (완벽 이해)</span>
+            </div>
+        </div>
+
+        <!-- === 질문 3 (슬라이더) === -->
+        <div class="survey-question">
+            <label class="slider-label" for="q3Slider">
+                Q3. '회전체'를 실생활(Q드럼)에 적용하는 과정이 흥미로웠나요?
+            </label>
+            <div id="q3Emoji" class="slider-emoji">😊</div>
+            <div id="q3Score" class="slider-score">5 / 10</div>
+            <input 
+                type="range" 
+                id="q3Slider"
+                min="1" max="10" value="5" 
+                class="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 survey-slider"
+                data-emoji-target="q3Emoji"
+                data-score-target="q3Score"
+            >
+            <div class="slider-legend">
+                <span>1점 (지루함)</span>
+                <span>10점 (매우 흥미로움)</span>
+            </div>
+        </div>
+
+        <!-- === 질문 4 (서술형 - 적정기술) === -->
+        <div class="survey-question">
+            <label class="slider-label" for="comments_q4">
+                Q4. Q드럼과 같은 적정 기술에 대한 자신의 생각을 간단하게 적어주세요.
+            </label>
+            <textarea
+                id="comments_q4"
+                rows="4"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                placeholder="적정 기술에 대한 생각을 적어주세요..."
+            ></textarea>
+        </div>
+
+        <!-- === 질문 5 (서술형 - 수업 피드백) === -->
+        <div class="survey-question">
+            <label class="slider-label" for="comments_q5">
+                Q5. 오늘 수업에서 어려웠던 점이나 흥미로웠던 점을 자유롭게 적어주세요.
+            </label>
+            <textarea
+                id="comments_q5"
+                rows="4"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                placeholder="수업에 대한 의견을 남겨주세요..."
+            ></textarea>
+        </div>
+
+
+        <!-- === 제출 버튼 === -->
+        <button id="submitButton" 
+                class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg mt-2
+                       hover:bg-blue-700 transition duration-300
+                       disabled:bg-gray-400 disabled:cursor-not-allowed">
+            제출하기
+        </button>
+        <!-- === 상태 메시지 === -->
+        <div id="statusMessage" class="text-sm text-gray-600 mt-4 h-5">
+            <!-- 자바스크립트에서 상태 메시지 표시 -->
+        </div>
+
+    </div>
+
+    <!-- === 실시간 결과 패널 (개별 목록 제거됨) === -->
+    <div id="resultsCard" class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full mx-4 mt-6" style="display: none;"> 
+        <h2 class="text-xl font-bold text-gray-800 mb-4">
+            실시간 피드백 현황
+        </h2>
+        
+        <!-- 평균 점수 표시 영역 -->
+        <div id="averageScoresContainer" class="mb-4">
+            <p id="totalResponses" class="text-xl font-bold text-blue-600 mb-2">불러오는 중...</p>
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div>
+                    <span class="text-sm font-semibold text-gray-600">Q1 참여도</span>
+                    <p id="avgQ1" class="text-2xl font-bold text-gray-800">-</p>
+                </div>
+                <div>
+                    <span class="text-sm font-semibold text-gray-600">Q2 이해도</span>
+                    <p id="avgQ2" class="text-2xl font-bold text-gray-800">-</p>
+                </div>
+                <div>
+                    <span class="text-sm font-semibold text-gray-600">Q3 흥미도</span>
+                    <p id="avgQ3" class="text-2xl font-bold text-gray-800">-</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- [삭제됨] 개별 응답 목록 영역은 이 자리에서 제거되었습니다. -->
+
+    </div>
+
+
+    <!-- Firebase SDK (반드시 type="module" 사용) -->
+   <script type="module">
+    // Firebase SDK 모듈 임포트
+    import { initializeApp } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js)";
+    import { 
+        getAuth, 
+        signInAnonymously
+    } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js)";
+    import { 
+        getFirestore, 
+        collection, 
+        addDoc, 
+        serverTimestamp, 
+        onSnapshot, 
+        query
+    } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js)";
+
+
+    // [!!! 가장 중요 !!!]
+    // 1단계에서 복사한 선생님의 firebaseConfig 코드를 여기에 붙여넣으세요.
+   const firebaseConfig = {
+  apiKey: "AIzaSyChU8wA8co0I30hGCn3jg6Nr8qdDRNf3Go",
+  authDomain: "classfeedback-feec4.firebaseapp.com",
+  projectId: "classfeedback-feec4",
+  storageBucket: "classfeedback-feec4.firebasestorage.app",
+  messagingSenderId: "304232184137",
+  appId: "1:304232184137:web:99ed72f260ea6064d38298"
+};
+
+
+    // --- (이 아래부터는 수정하지 마세요) ---
+
+    // DOM 요소 가져오기 (슬라이더 관련)
+    const sliders = document.querySelectorAll('.survey-slider');
+    const commentsQ4Text = document.getElementById('comments_q4'); // (적정기술)
+    const commentsQ5Text = document.getElementById('comments_q5'); // (수업 피드백)
+
+    // DOM 요소 가져오기 (제출/결과 관련)
+    const submitButton = document.getElementById('submitButton');
+    const statusMessage = document.getElementById('statusMessage');
+    const resultsCard = document.getElementById('resultsCard');
+
+    // 평균 점수 DOM 요소
+    const totalResponsesEl = document.getElementById('totalResponses');
+    const avgQ1El = document.getElementById('avgQ1');
+    const avgQ2El = document.getElementById('avgQ2');
+    const avgQ3El = document.getElementById('avgQ3');
+
+    // Firebase 변수
+    let db, auth, userId;
+
+    // [수정됨] 2단계의 보안 규칙과 일치하는 새 컬렉션 경로
+    const collectionPath = 'responses'; 
+
+    // --- 헬퍼 함수 ---
+    function getEmoji(score) {
+        const numScore = parseInt(score, 10);
+        if (numScore >= 1 && numScore <= 4) return '😔';
+        else if (numScore >= 5 && numScore <= 8) return '😊';
+        else return '😁';
+    }
+
+    function updateSlider(sliderElement) {
+        const score = sliderElement.value;
+        const emojiTargetId = sliderElement.dataset.emojiTarget;
+        const scoreTargetId = sliderElement.dataset.scoreTarget;
+
+        const emojiEl = document.getElementById(emojiTargetId);
+        const scoreEl = document.getElementById(scoreTargetId);
+
+        if (emojiEl) emojiEl.textContent = getEmoji(score);
+        if (scoreEl) scoreEl.textContent = `${score} / 10`;
+
+        if (emojiEl) {
+            emojiEl.style.transform = 'scale(1.25)';
+            setTimeout(() => {
+                emojiEl.style.transform = 'scale(1)';
+            }, 150);
+        }
+    }
+
+    // --- Firebase 관련 함수 ---
+
+    // Firebase 초기화 및 인증
+    async function initializeFirebase() {
+        try {
+            // [수정됨] 1단계의 firebaseConfig로 앱 초기화
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            resultsCard.style.display = 'block';
+
+            // [수정됨] 익명으로만 로그인 (간소화)
+            await signInAnonymously(auth);
+            userId = auth.currentUser.uid;
+
+            if (userId) {
+                submitButton.disabled = false;
+                statusMessage.textContent = "데이터베이스 연결 완료";
+                listenForResponses(); 
+            }
+        } catch (error) {
+            console.error("Firebase 초기화 실패:", error);
+            statusMessage.textContent = "DB 연결 실패. F12를 눌러 콘솔을 확인하세요.";
+            totalResponsesEl.textContent = "오류: DB 연결 실패";
+        }
+    }
+
+    // 응답 제출 함수
+    async function submitResponse() {
+        if (!db || !userId) {
+            statusMessage.textContent = "아직 DB에 연결되지 않았습니다.";
+            return;
+        }
+
+        const q1Score = parseInt(document.getElementById('q1Slider').value, 10);
+        const q2Score = parseInt(document.getElementById('q2Slider').value, 10);
+        const q3Score = parseInt(document.getElementById('q3Slider').value, 10);
+        const comments_q4 = commentsQ4Text.value.trim();
+        const comments_q5 = commentsQ5Text.value.trim();
+
+        submitButton.disabled = true;
+        statusMessage.textContent = "제출 중...";
+
+        try {
+            // [수정됨] 새 경로로 데이터 저장
+            await addDoc(collection(db, collectionPath), {
+                q1Score: q1Score,
+                q2Score: q2Score,
+                q3Score: q3Score,
+                comments_q4: comments_q4,
+                comments_q5: comments_q5,
+                submittedAt: serverTimestamp(), 
+                submitterId: userId 
+            });
+
+            statusMessage.textContent = "제출 완료! 감사합니다.";
+
+            // (제출 완료 후 버튼 다시 활성화 - 여러 번 제출 허용)
+            setTimeout(() => {
+                statusMessage.textContent = "응답을 다시 제출할 수 있습니다.";
+                submitButton.disabled = false;
+            }, 2000);
+
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            statusMessage.textContent = "제출 실패. 다시 시도해주세요.";
+            submitButton.disabled = false;
+        }
+    }
+
+    // 실시간 결과 수신 함수 (최신 버전과 동일)
+    function listenForResponses() {
+        // [수정됨] 새 경로에서 데이터 수신
+        const q = query(collection(db, collectionPath));
+
+        onSnapshot(q, (querySnapshot) => {
+            let responsesCount = 0;
+            let totalQ1Score = 0; 
+            let totalQ2Score = 0;
+            let totalQ3Score = 0;
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                if (data.submittedAt && 
+                    data.q1Score !== undefined &&
+                    data.q2Score !== undefined &&
+                    data.q3Score !== undefined) 
+                {
+                    responsesCount++;
+                    totalQ1Score += data.q1Score;
+                    totalQ2Score += data.q2Score;
+                    totalQ3Score += data.q3Score;
+                }
+            });
+
+            if (responsesCount > 0) {
+                const avgQ1 = (totalQ1Score / responsesCount).toFixed(1);
+                const avgQ2 = (totalQ2Score / responsesCount).toFixed(1);
+                const avgQ3 = (totalQ3Score / responsesCount).toFixed(1);
+
+                totalResponsesEl.textContent = `총 ${responsesCount}개 응답`;
+                avgQ1El.textContent = avgQ1;
+                avgQ2El.textContent = avgQ2;
+                avgQ3El.textContent = avgQ3;
+
+            } else {
+                totalResponsesEl.textContent = "아직 응답이 없습니다.";
+                avgQ1El.textContent = "-";
+                avgQ2El.textContent = "-";
+                avgQ3El.textContent = "-";
+            }
+        }, (error) => {
+            console.error("실시간 수신 오류: ", error);
+            totalResponsesEl.textContent = "결과 로딩 중 오류 발생";
+        });
+    }
+
+    // --- 이벤트 리스너 연결 ---
+    sliders.forEach(slider => {
+        slider.addEventListener('input', () => updateSlider(slider));
+        document.addEventListener('DOMContentLoaded', () => updateSlider(slider));
+    });
+
+    submitButton.addEventListener('click', submitResponse);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        submitButton.disabled = true; 
+        statusMessage.textContent = "데이터베이스 연결 중...";
+        initializeFirebase(); 
+    });
+</script></body>
+</html>
