@@ -198,13 +198,13 @@
 
 
     <!-- Firebase SDK (반드시 type="module" 사용) -->
-   <script type="module">
-    // Firebase SDK 모듈 임포트 (오류 수정된 버전)
-    import { initializeApp } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js)";
+<script type="module">
+    // Firebase SDK 모듈 임포트 (괄호 오류 최종 수정된 버전)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { 
         getAuth, 
         signInAnonymously
-    } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js)";
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { 
         getFirestore, 
         collection, 
@@ -212,11 +212,11 @@
         serverTimestamp, 
         onSnapshot, 
         query
-    } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js)";
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 
     // [!!! 가장 중요 !!!]
-    // 1단계에서 복사한 선생님의 firebaseConfig 코드를 여기에 붙여넣으세요.
+    // [1단계]에서 복사한 선생님의 firebaseConfig 코드를 여기에 붙여넣으세요.
 const firebaseConfig = {
   apiKey: "AIzaSyChU8wA8co0I30hGCn3jg6Nr8qdDRNf3Go",
   authDomain: "classfeedback-feec4.firebaseapp.com",
@@ -229,26 +229,13 @@ const firebaseConfig = {
 
     // --- (이 아래부터는 수정하지 마세요) ---
 
-    // DOM 요소 가져오기 (슬라이더 관련)
-    const sliders = document.querySelectorAll('.survey-slider');
-    const commentsQ4Text = document.getElementById('comments_q4'); // (적정기술)
-    const commentsQ5Text = document.getElementById('comments_q5'); // (수업 피드백)
-
-    // DOM 요소 가져오기 (제출/결과 관련)
-    const submitButton = document.getElementById('submitButton');
-    const statusMessage = document.getElementById('statusMessage');
-    const resultsCard = document.getElementById('resultsCard');
-
-    // 평균 점수 DOM 요소
-    const totalResponsesEl = document.getElementById('totalResponses');
-    const avgQ1El = document.getElementById('avgQ1');
-    const avgQ2El = document.getElementById('avgQ2');
-    const avgQ3El = document.getElementById('avgQ3');
-
+    // [수정] DOM 요소 변수 선언 (초기화는 DOM 로드 후)
+    let sliders, commentsQ4Text, commentsQ5Text, submitButton, statusMessage, resultsCard, totalResponsesEl, avgQ1El, avgQ2El, avgQ3El;
+    
     // Firebase 변수
     let db, auth, userId;
-
-    // [수정됨] 2단계의 보안 규칙과 일치하는 새 컬렉션 경로
+    
+    // [수정됨] [2단계]의 보안 규칙과 일치하는 새 컬렉션 경로
     const collectionPath = 'responses'; 
 
     // --- 헬퍼 함수 ---
@@ -260,6 +247,9 @@ const firebaseConfig = {
     }
 
     function updateSlider(sliderElement) {
+        // [수정] sliderElement가 null이 아닐 때만 실행
+        if (!sliderElement) return; 
+
         const score = sliderElement.value;
         const emojiTargetId = sliderElement.dataset.emojiTarget;
         const scoreTargetId = sliderElement.dataset.scoreTarget;
@@ -269,7 +259,7 @@ const firebaseConfig = {
 
         if (emojiEl) emojiEl.textContent = getEmoji(score);
         if (scoreEl) scoreEl.textContent = `${score} / 10`;
-
+        
         if (emojiEl) {
             emojiEl.style.transform = 'scale(1.25)';
             setTimeout(() => {
@@ -287,40 +277,44 @@ const firebaseConfig = {
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
-
-            resultsCard.style.display = 'block';
+            
+            // [수정] DOM 요소가 로드된 후이므로 null 체크 후 안전하게 표시
+            if (resultsCard) resultsCard.style.display = 'block';
 
             // [수정됨] 익명으로만 로그인 (간소화)
             await signInAnonymously(auth);
             userId = auth.currentUser.uid;
-
+                
             if (userId) {
-                submitButton.disabled = false;
-                statusMessage.textContent = "데이터베이스 연결 완료";
+                // [수정] null 체크
+                if (submitButton) submitButton.disabled = false;
+                if (statusMessage) statusMessage.textContent = "데이터베이스 연결 완료";
                 listenForResponses(); 
             }
         } catch (error) {
             console.error("Firebase 초기화 실패:", error);
-            statusMessage.textContent = "DB 연결 실패. F12를 눌러 콘솔을 확인하세요.";
-            totalResponsesEl.textContent = "오류: DB 연결 실패";
+            // [수정] null 체크
+            if (statusMessage) statusMessage.textContent = "DB 연결 실패. F12를 눌러 콘솔을 확인하세요.";
+            if (totalResponsesEl) totalResponsesEl.textContent = "오류: DB 연결 실패";
         }
     }
 
     // 응답 제출 함수
     async function submitResponse() {
         if (!db || !userId) {
-            statusMessage.textContent = "아직 DB에 연결되지 않았습니다.";
+            if (statusMessage) statusMessage.textContent = "아직 DB에 연결되지 않았습니다.";
             return;
         }
 
+        // [수정] DOM 요소가 로드된 후이므로 안전하게 값 참조
         const q1Score = parseInt(document.getElementById('q1Slider').value, 10);
         const q2Score = parseInt(document.getElementById('q2Slider').value, 10);
         const q3Score = parseInt(document.getElementById('q3Slider').value, 10);
-        const comments_q4 = commentsQ4Text.value.trim();
-        const comments_q5 = commentsQ5Text.value.trim();
+        const comments_q4 = commentsQ4Text ? commentsQ4Text.value.trim() : "";
+        const comments_q5 = commentsQ5Text ? commentsQ5Text.value.trim() : "";
 
-        submitButton.disabled = true;
-        statusMessage.textContent = "제출 중...";
+        if (submitButton) submitButton.disabled = true;
+        if (statusMessage) statusMessage.textContent = "제출 중...";
 
         try {
             // [수정됨] 새 경로로 데이터 저장
@@ -333,19 +327,19 @@ const firebaseConfig = {
                 submittedAt: serverTimestamp(), 
                 submitterId: userId 
             });
-
-            statusMessage.textContent = "제출 완료! 감사합니다.";
-
+            
+            if (statusMessage) statusMessage.textContent = "제출 완료! 감사합니다.";
+            
             // (제출 완료 후 버튼 다시 활성화 - 여러 번 제출 허용)
             setTimeout(() => {
-                statusMessage.textContent = "응답을 다시 제출할 수 있습니다.";
-                submitButton.disabled = false;
+                if (statusMessage) statusMessage.textContent = "응답을 다시 제출할 수 있습니다.";
+                if (submitButton) submitButton.disabled = false;
             }, 2000);
 
         } catch (error) {
             console.error("Error adding document: ", error);
-            statusMessage.textContent = "제출 실패. 다시 시도해주세요.";
-            submitButton.disabled = false;
+            if (statusMessage) statusMessage.textContent = "제출 실패. 다시 시도해주세요.";
+            if (submitButton) submitButton.disabled = false;
         }
     }
 
@@ -359,7 +353,7 @@ const firebaseConfig = {
             let totalQ1Score = 0; 
             let totalQ2Score = 0;
             let totalQ3Score = 0;
-
+            
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 if (data.submittedAt && 
@@ -374,40 +368,64 @@ const firebaseConfig = {
                 }
             });
 
+            // [수정] DOM 요소 null 체크
             if (responsesCount > 0) {
                 const avgQ1 = (totalQ1Score / responsesCount).toFixed(1);
                 const avgQ2 = (totalQ2Score / responsesCount).toFixed(1);
                 const avgQ3 = (totalQ3Score / responsesCount).toFixed(1);
 
-                totalResponsesEl.textContent = `총 ${responsesCount}개 응답`;
-                avgQ1El.textContent = avgQ1;
-                avgQ2El.textContent = avgQ2;
-                avgQ3El.textContent = avgQ3;
+                if (totalResponsesEl) totalResponsesEl.textContent = `총 ${responsesCount}개 응답`;
+                if (avgQ1El) avgQ1El.textContent = avgQ1;
+                if (avgQ2El) avgQ2El.textContent = avgQ2;
+                if (avgQ3El) avgQ3El.textContent = avgQ3;
 
             } else {
-                totalResponsesEl.textContent = "아직 응답이 없습니다.";
-                avgQ1El.textContent = "-";
-                avgQ2El.textContent = "-";
-                avgQ3El.textContent = "-";
+                if (totalResponsesEl) totalResponsesEl.textContent = "아직 응답이 없습니다.";
+                if (avgQ1El) avgQ1El.textContent = "-";
+                if (avgQ2El) avgQ2El.textContent = "-";
+                if (avgQ3El) avgQ3El.textContent = "-";
             }
         }, (error) => {
             console.error("실시간 수신 오류: ", error);
-            totalResponsesEl.textContent = "결과 로딩 중 오류 발생";
+            if (totalResponsesEl) totalResponsesEl.textContent = "결과 로딩 중 오류 발생";
         });
     }
 
-    // --- 이벤트 리스너 연결 ---
-    sliders.forEach(slider => {
-        slider.addEventListener('input', () => updateSlider(slider));
-        // 페이지 로드 시 초기값 설정
-        document.addEventListener('DOMContentLoaded', () => updateSlider(slider));
-    });
-
-    submitButton.addEventListener('click', submitResponse);
-
+    // --- [!!! 중요 수정 !!!] ---
+    // 모든 DOM 관련 코드를 DOMContentLoaded 이벤트 리스너 내부로 이동
     document.addEventListener('DOMContentLoaded', () => {
-        submitButton.disabled = true; 
-        statusMessage.textContent = "데이터베이스 연결 중...";
+        // [수정] DOM 요소들을 이 안에서 찾습니다.
+        sliders = document.querySelectorAll('.survey-slider');
+        commentsQ4Text = document.getElementById('comments_q4');
+        commentsQ5Text = document.getElementById('comments_q5');
+        submitButton = document.getElementById('submitButton');
+        statusMessage = document.getElementById('statusMessage');
+        resultsCard = document.getElementById('resultsCard');
+        totalResponsesEl = document.getElementById('totalResponses');
+        avgQ1El = document.getElementById('avgQ1');
+        avgQ2El = document.getElementById('avgQ2');
+        avgQ3El = document.getElementById('avgQ3');
+
+        // [수정] null 체크 추가 및 리스너 연결
+        if (sliders) {
+            sliders.forEach(slider => {
+                slider.addEventListener('input', () => updateSlider(slider));
+                // 페이지 로드 시 초기값 설정
+                updateSlider(slider);
+            });
+        }
+
+        // [수정] null 체크 추가 및 리스너 연결
+        if (submitButton) {
+            submitButton.addEventListener('click', submitResponse);
+            submitButton.disabled = true; // 초기 비활성화
+        }
+        
+        if (statusMessage) {
+            statusMessage.textContent = "데이터베이스 연결 중...";
+        }
+
+        // Firebase 초기화 시작
         initializeFirebase(); 
     });
 </script></body>
